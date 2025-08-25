@@ -223,6 +223,7 @@ You will work with the following three files in the `part1` directory:
 A Makefile is provided in the part1 directory to simplify the compilation of the program. This allows you to build the project and its dependencies with a single command. To **compile** the program:
 
 ```bash
+cd part1
 make all
 ```
 
@@ -410,6 +411,7 @@ You will work with the following three files in the `part2` directory:
 To **compile** the program:
 
 ```bash
+cd part2
 make all
 ```
 
@@ -571,23 +573,81 @@ Here are the key functions you'll use:
     - `K`: number of nearest neighbors to retrieve
     - `epsilon`: approximation factor (0 for exact search)
   - Return: the number of neighbors found. The return type is *ae_int_t*, which is Int type redefinition in alglib namespace.
+
   - Example:
   ```
   alglib::ae_int_t count = alglib::kdtreequeryaknn(tree, query, k, eps);
   ```
 
 
+### kdtreequeryresultsdistances
+
+This function retrieves the distances from the query point to each of the nearest neighbors found by the most recent query (e.g., after calling `kdtreequeryaknn`). The distances are returned in the same order as the tags/IDs from `kdtreequeryresultstags`.
+
+- Arguments:
+  - `tree`: the k-d tree object after a query
+  - `distances`: a `real_1d_array` to be filled with the distances to the found neighbors
+
+- Example:
+  ```cpp
+  alglib::real_1d_array dist;
+  dist.setlength(k); // k = number of neighbors requested
+  alglib::kdtreequeryresultsdistances(tree, dist);
+  // dist[0], dist[1], ..., dist[k-1] now contain the distances to the nearest neighbors
+  ```
+
+  For example, after running a KNN query:
+  ```cpp
+  alglib::ae_int_t count = alglib::kdtreequeryaknn(tree, query, k, eps);
+  alglib::real_1d_array dist;
+  dist.setlength(count);
+  alglib::kdtreequeryresultsdistances(tree, dist);
+  for (int i = 0; i < count; ++i) {
+      std::cout << "Neighbor " << i+1 << ": distance = " << dist[i] << std::endl;
+  }
+  ```
+
+
+### kdtreequeryresultstags
+
+This function retrieves the integer tags (IDs) of the nearest neighbors found by the most recent query (e.g., after calling `kdtreequeryaknn`). The tags correspond to the IDs you provided when building the tree with `kdtreebuildtagged`. This allows you to map the search results back to your original data points.
+
+- Arguments:
+  - `tree`: the k-d tree object after a query
+  - `tags`: an `integer_1d_array` to be filled with the IDs of the found neighbors
+
+- Example:
+  ```cpp
+  alglib::integer_1d_array idx;
+  idx.setlength(k); // k = number of neighbors requested
+  alglib::kdtreequeryresultstags(tree, idx);
+  // idx[0], idx[1], ..., idx[k-1] now contain the IDs of the nearest neighbors
+  ```
+
+  For example, after running a KNN query:
+  ```cpp
+  alglib::ae_int_t count = alglib::kdtreequeryaknn(tree, query, k, eps);
+  alglib::integer_1d_array idx;
+  idx.setlength(count);
+  alglib::kdtreequeryresultstags(tree, idx);
+  for (int i = 0; i < count; ++i) {
+      std::cout << "Neighbor " << i+1 << ": id = " << idx[i] << std::endl;
+  }
+  ```
+
+- 
+
+
 ## Starter code
 
-You will work with the provided source file:
-```
-knn_alglib.cpp
-```
+You will work with the `main.cpp` in the `part3` directory.
+
 
 To **compile** the program:
 
 ```bash
-g++ -std=c++20 -o3 -Wall -I ./alglib-cpp/src knn_arglib.cpp ./alglib-cpp/src/*.cpp -o knn_arglib
+cd part3
+Make all
 ```
 
 To run the program:

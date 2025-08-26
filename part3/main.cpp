@@ -1,9 +1,3 @@
-/*
-g++ -std=c++11 -I ~/course/hw1/alglib-cpp/src knn_arglib.cpp ~/course/hw1/alglib-cpp/src/*.cpp -o knn_arglib
-
-./knn_arglib ./data/data_short.json
-*/
-
 #include <iostream>
 #include <fstream>
 #include <vector>

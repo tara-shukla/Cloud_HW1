@@ -750,3 +750,25 @@ Your work for Part 3 will be graded based on the correctness of your implementat
     - Clearly presenting timing comparisons between your implementation and ALGLIB for exact KNN search.
     - Including a table benchmarking the performance of approximate KNN search for different values of ε, as described in the instructions.
     - Offering a short discussion or insight into the trade-offs between speed and accuracy.
+
+## Submission Criteria
+
+### Part 1.
+
+Submit and upload the following files to the hw1 part 1 gradescope autograder:
+
+- `knn.cpp`
+- `knn.hpp`
+
+### Part 2.
+
+Submit and upload the following files to the hw1 part 2 gradescope autograder:
+
+- `knn.hpp`
+
+### Part 3.
+
+Submit and upload the following files to the hw1 part 3 gradescope autograder:
+
+- `knn_alglib.cpp`
+- `report.pdf` (this will be manually reviewed)

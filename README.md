@@ -8,7 +8,10 @@ By the end of the assignment, you should be able to:
 - Work with external libraries (ALGLIB) to perform KNN and compare exact vs. approximate search methods.
 - Understand practical trade-offs between accuracy and speed in real-world search systems.
 
-Sections II-V explain the entire overview of this assignment. We recommend that you read and understand these first before proceeding to implementation in Section VI.
+Sections II-III explain the entire overview of this assignment. We recommend that you read and understand these first before proceeding to the implementations in Sections IV-VI.
+
+
+The assignment is broken down into three main parts with three different deadlines:
 
 | Task                                         | Points | Due Date             |
 |----------------------------------------------|--------|----------------------|
@@ -19,7 +22,7 @@ Sections II-V explain the entire overview of this assignment. We recommend that 
 For each task, we have provided you with starter code and unit tests. You need to submit the
 code to Gradescope with your implementation at each due date.
 
-# Background
+# I. Background
 
 Many problems in computing involve K-Nearest Neighbor (KNN) Search—identifying the K points in a dataset that are closest to a given query point. This primitive underlies a wide range of applications, including recommendation systems (e.g., finding similar users or items) and natural language processing (e.g., retrieving semantically similar words or sentences).
 
@@ -27,7 +30,7 @@ In these applications, each data point—such as a user profile, product, or sen
 
 To efficiently perform KNN search over large collections of embeddings, we use spatial indexing structures like the k-d tree. The k-d tree recursively partitions the space by axis-aligned splits, enabling fast pruning of regions that are far from the query point and significantly reducing the number of distance computations required.
 
-# KNN Search with 1D Data
+# II. KNN Search with 1D Data
 
 To illustrate the core ideas behind KNN search on a k-d tree, let’s begin with a simple case: 1-dimensional (k=1) data. Suppose we are given a list of scalars, [1, 3, 4.2, 5, 6, 7.8, 9], and our goal is to answer queries like: “What are the two numbers closest to 4?”
 
@@ -152,7 +155,7 @@ Let’s walk through how the algorithm finds the 2 nearest neighbors to the quer
 The 2 nearest neighbors to 4.9 are: [5, 4.2]
 
 
-# KNN Search with k-d Data
+# III. KNN Search with k-d Data
 
 So far, we’ve seen how to build a k-d tree for 1D data by recursively splitting the data at the median to form a balanced binary search tree. Now we generalize this idea to handle data points in $\mathbb{R}^d$.
 
@@ -225,7 +228,7 @@ Now that we understand how to build a k-d tree, we can extend the KNN search pro
 
 
 
-# Part 1: Work with 1D Data (40 points, due in 2 weeks)
+# IV. Part 1: Work with 1D Data (40 points, due in 2 weeks)
 You are required to implement two logics:
 - Building a k-d tree
 - Performing KNN search over the k-d tree
@@ -375,7 +378,7 @@ To help us validate your implementation, we have provided a utility function pri
 
 
 
-# Part 2: Work with k-d Data (20 points, due in 1 week)
+# V. Part 2: Work with k-d Data (20 points, due in 1 week)
 
 In this part, you will generalize your 1D implementation to handle multi-dimensional data. Real-world problems often require reasoning over high-dimensional inputs—for example, text embeddings, image features, or sensor data. You will reuse the same core logic from Part 1 (reading data, building the tree, and running KNN search), but extend it to operate over vectors in $\mathbb{R}^d$ instead of scalars.
 
@@ -502,7 +505,7 @@ Each of the four test cases is worth 5 points:
 
 
 
-# Part 3: ANN Search Using the ALGLIB Library (30 points, 1 week)
+# VI. Part 3: ANN Search Using the ALGLIB Library (30 points, 1 week)
 
 
 In this part, your goal is to reproduce the KNN functionality you implemented in Part 1 and Part 2, but now using the ALGLIB library.
@@ -772,7 +775,7 @@ Your work for Part 3 will be graded based on the correctness of your implementat
     - Including a table benchmarking the performance of approximate KNN search for different values of ε, as described in the instructions.
     - Offering a short discussion or insight into the trade-offs between speed and accuracy.
 
-## Submission Criteria
+# VII. Submission Criteria
 
 ### Part 1.
 

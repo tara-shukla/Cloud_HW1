@@ -1,3 +1,24 @@
+# Overview
+The goal of this assignment is to give you a practical understanding of how K-Nearest Neighbors (KNN) search works, starting from simple 1D data and progressing to high-dimensional, real-world applications. You will begin by building a basic k-d tree and implementing a KNN search algorithm from scratch. Then, you'll extend your solution to work with multi-dimensional data, like text embeddings used in semantic search. In the final part, you'll use the ALGLIB library to explore how optimized and approximate KNN search can improve performance.
+
+
+By the end of the assignment, you should be able to:
+- Build a balanced k-d tree from both 1D and multi-dimensional data.
+- Implement a recursive KNN search that efficiently finds the closest points to a query.
+- Work with external libraries (ALGLIB) to perform KNN and compare exact vs. approximate search methods.
+- Understand practical trade-offs between accuracy and speed in real-world search systems.
+
+Sections II-V explain the entire overview of this assignment. We recommend that you read and understand these first before proceeding to implementation in Section VI.
+
+| Task                                         | Points | Due Date             |
+|----------------------------------------------|--------|----------------------|
+| 1. Work with 1D Data                         | 60     | September 12, 2025   |
+| 2. Work with k-d Data                        | 20     | September 19, 2025   |
+| 3. ANN Search Using the ALGLIB Library       | 30     | September 26, 2025   |
+
+For each task, we have provided you with starter code and unit tests. You need to submit the
+code to Gradescope with your implementation at each due date.
+
 # Background
 
 Many problems in computing involve K-Nearest Neighbor (KNN) Search—identifying the K points in a dataset that are closest to a given query point. This primitive underlies a wide range of applications, including recommendation systems (e.g., finding similar users or items) and natural language processing (e.g., retrieving semantically similar words or sentences).

@@ -316,6 +316,7 @@ When multiple data points share the same value along the splitting dimension, th
     - First, compare points based on their value in the current splitting dimension.
     - If two points are equal along that dimension, compare their values in the next dimension: (axis + 1) % d.
     - If still tied, continue comparing values in subsequent dimensions, cycling through all d dimensions in order, until the tie is broken.
+  - You can assume there will never be a complete tie (no two points are exactly the same in every dimension).
 
 - Median selection rule:
   - After sorting the list of points as described above, select the median point by index.
@@ -328,7 +329,7 @@ We have generated four synthetic datasets, 1d-1.json, 1d-5.json, 1d-10.json, and
 
 ### B. Implement the `knnSearch` function (20 points)
 
-You are also required to implement the `knnSearch` function, which recursively traverses the k-d tree to find the k nearest neighbors of a given query point.
+You are also required to implement the `knnSearch` function, which recursively traverses the k-d tree to find the k nearest neighbors of a given query point. The value of `K` (the number of nearest neighbors to find) will always be smaller than or equal to the total number of points in the tree. In other words, there will always be enough data points to satisfy the request.
 
 Arguments:
 

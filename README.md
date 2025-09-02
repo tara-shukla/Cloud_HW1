@@ -15,9 +15,9 @@ The assignment is broken down into three main parts with three different deadlin
 
 | Task                                         | Points | Due Date             |
 |----------------------------------------------|--------|----------------------|
-| 1. Work with 1D Data                         | 60     | September 12, 2025   |
-| 2. Work with k-d Data                        | 20     | September 19, 2025   |
-| 3. ANN Search Using the ALGLIB Library       | 30     | September 26, 2025   |
+| 1. Work with 1D Data                         | 60     | September 15, 2025   |
+| 2. Work with k-d Data                        | 20     | September 22, 2025   |
+| 3. ANN Search Using the ALGLIB Library       | 30     | September 29, 2025   |
 
 For each task, we have provided you with starter code and unit tests. You need to submit the
 code to Gradescope with your implementation at each due date.

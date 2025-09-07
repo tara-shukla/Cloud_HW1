@@ -102,11 +102,11 @@ void knnSearch(Node *node,
     //because something could still beat the worst node -- explore other
     //or if we still need to add candidates
 
-    planeDist = std::abs(getCoordinate(node->queryEmbedding, axis)-getCoordinate(node->embedding, axis));
+    float planeDist = std::abs(getCoordinate(node->queryEmbedding, axis)-getCoordinate(node->embedding, axis));
 
     if (heap.size()< static_cast<size_t>(K) || distance(heap.top().first, node->queryEmbedding)> planeDist){
 
-        if getCoordinate(node->queryEmbedding, axis) < getCoordinate(node->embedding, axis){
+        if (getCoordinate(node->queryEmbedding, axis) < getCoordinate(node->embedding, axis)){
             knnSearch(node->right, depth+1, K,heap);
         }
         else{

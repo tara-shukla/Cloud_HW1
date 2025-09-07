@@ -75,25 +75,41 @@ void knnSearch(Node *node,
     axis = depth % Embedding_T<T>::Dim;
 
     //Compare the query point (Node<T>::queryEmbedding) to the current node’s point along the splitting axis.
-    if getCoordinate(node->queryEmbedding, axis) < getCoordinate(node->embedding, axis):
+    if getCoordinate(node->queryEmbedding, axis) < getCoordinate(node->embedding, axis){
         knnSearch(node->left, depth+1, heap);
-    else:
+    }
+        
+    else{
         knnSearch(node->right, depth+1, heap);
+    }
 
     //now heap is updated w closer tree candidates
     //we check current node -- shd it be added to heap?
 
-    if (heap.size()<K):
-        heap.push(node->embedding)
+    if (heap.size()<K){
+        heap.push(node->embedding);
 
-    if (distance(node->queryEmbedding, node->embedding) < heap.top()):
+    }
+    else if (distance(node->queryEmbedding, node->embedding) < heap.top()){
         heap.pop();
-        heap.push(node->embedding)
+        heap.push(node->embedding);
+    }
 
+    //if current node is not the worst node on the heap then we can't prune 
+    //because something could still beat the worst node -- explore other
+    //or if we still need to add candidates
 
-    //if current node was better than (old) worst node on the heap then we can't prune -- explore
+    planeDist = std::abs(getCoordinate(node->queryEmbedding, axis)-getCoordinate(node->embedding, axis));
 
+    if (heap.size()<K || distance(heap.top, node->queryEmbedding)> planeDist){
 
+        if getCoordinate(node->queryEmbedding, axis) < getCoordinate(node->embedding, axis){
+            knnSearch(node->right, depth+1, heap);
+        }
+        else{
+            knnSearch(node->left, depth+1, heap);
+        }
+    }
 
     return;
 }

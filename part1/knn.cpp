@@ -73,27 +73,29 @@ void knnSearch(Node *node,
    if (node==nullptr){
         return;
    }
-    int axis = depth % Embedding_T<T>::Dim;
+    // int axis = depth % Embedding_T<T>::Dim;
+    // axis = 0 in 1d always
+    int axis = 0;
 
     //Compare the query point (Node<T>::queryEmbedding) to the current node’s point along the splitting axis.
-    if getCoordinate(node->queryEmbedding, axis) < getCoordinate(node->embedding, axis){
-        knnSearch(node->left, depth+1, heap);
+    if (getCoordinate(node->queryEmbedding, axis) < getCoordinate(node->embedding, axis)){
+        knnSearch(node->left, depth+1,K, heap);
     }
         
     else{
-        knnSearch(node->right, depth+1, heap);
+        knnSearch(node->right, depth+1,K, heap);
     }
 
     //now heap is updated w closer tree candidates
     //we check current node -- shd it be added to heap?
 
-    if (heap.size()<K){
-        heap.push(node->embedding);
+    if (heap.size()< static_cast<size_t>(K)){
+        heap.push({node->embedding, node->idx});
 
     }
-    else if (distance(node->queryEmbedding, node->embedding) < heap.top()){
+    else if (distance(node->queryEmbedding, node->embedding) < heap.top().first){
         heap.pop();
-        heap.push(node->embedding);
+        heap.push({node->embedding, node->idx});
     }
 
     //if current node is not the worst node on the heap then we can't prune 
@@ -102,13 +104,13 @@ void knnSearch(Node *node,
 
     planeDist = std::abs(getCoordinate(node->queryEmbedding, axis)-getCoordinate(node->embedding, axis));
 
-    if (heap.size()<K || distance(heap.top, node->queryEmbedding)> planeDist){
+    if (heap.size()< static_cast<size_t>(K) || distance(heap.top().first, node->queryEmbedding)> planeDist){
 
         if getCoordinate(node->queryEmbedding, axis) < getCoordinate(node->embedding, axis){
-            knnSearch(node->right, depth+1, heap);
+            knnSearch(node->right, depth+1, K,heap);
         }
         else{
-            knnSearch(node->left, depth+1, heap);
+            knnSearch(node->left, depth+1, K, heap);
         }
     }
 

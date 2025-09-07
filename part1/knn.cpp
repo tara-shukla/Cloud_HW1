@@ -78,7 +78,7 @@ void knnSearch(Node *node,
     int axis = 0;
 
     //Compare the query point (Node<T>::queryEmbedding) to the current node’s point along the splitting axis.
-    if (getCoordinate(node->queryEmbedding, axis) < getCoordinate(node->embedding, axis)){
+    if (getCoordinate(Node::queryEmbedding, axis) < getCoordinate(node->embedding, axis)){
         knnSearch(node->left, depth+1,K, heap);
     }
         
@@ -90,23 +90,25 @@ void knnSearch(Node *node,
     //we check current node -- shd it be added to heap?
 
     if (heap.size()< static_cast<size_t>(K)){
-        heap.push({node->embedding, node->idx});
+        heap.push({distance(Node::queryEmbedding, node->embedding), node->idx});
 
     }
-    else if (distance(node->queryEmbedding, node->embedding) < heap.top().first){
+    else if (distance(Node::queryEmbedding, node->embedding) < heap.top().first){
         heap.pop();
-        heap.push({node->embedding, node->idx});
+        heap.push({distance(Node::queryEmbedding, node->embedding), node->idx});
     }
 
     //if current node is not the worst node on the heap then we can't prune 
     //because something could still beat the worst node -- explore other
     //or if we still need to add candidates
 
-    float planeDist = std::abs(getCoordinate(node->queryEmbedding, axis)-getCoordinate(node->embedding, axis));
+    float planeDist = std::abs(getCoordinate(Node::queryEmbedding, axis)-getCoordinate(node->embedding, axis));
 
-    if (heap.size()< static_cast<size_t>(K) || distance(heap.top().first, node->queryEmbedding)> planeDist){
+    // if (heap.size()< static_cast<size_t>(K) || distance(heap.top().first, Node::queryEmbedding)> planeDist){
 
-        if (getCoordinate(node->queryEmbedding, axis) < getCoordinate(node->embedding, axis)){
+    if (heap.size()< static_cast<size_t>(K) || heap.top().first > planeDist){
+
+        if (getCoordinate(Node::queryEmbedding, axis) < getCoordinate(node->embedding, axis)){
             knnSearch(node->right, depth+1, K,heap);
         }
         else{

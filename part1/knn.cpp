@@ -70,9 +70,10 @@ void knnSearch(Node *node,
     You should recursively traverse the tree and maintain a max-heap of the K closest points found so far.
     For now, this is a stub that does nothing.
     */
-   if (node==nullptr):
+   if (node==nullptr){
         return;
-    axis = depth % Embedding_T<T>::Dim;
+   }
+    int axis = depth % Embedding_T<T>::Dim;
 
     //Compare the query point (Node<T>::queryEmbedding) to the current node’s point along the splitting axis.
     if getCoordinate(node->queryEmbedding, axis) < getCoordinate(node->embedding, axis){

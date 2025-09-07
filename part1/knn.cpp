@@ -31,17 +31,16 @@ Node* buildKD(std::vector<std::pair<Embedding_T,int>>& items, int depth) {
 
     sort(items.begin(), items.end(),
 		[](auto& a, auto& b){
-			return (a.first > b.first);
+			return (a.first < b.first);
 		});
     
 
     int n = items.size();
 
-    //just doing this should still make the median rule go to the smaller one right?
-    int medianIndex = n/2;
+    int medianIndex = (n-1)/2;
     
     std::vector<std::pair<Embedding_T,int>> leftTree(items.begin(), items.begin()+medianIndex);
-    std::vector<std::pair<Embedding_T,int>> rightTree(items.begin()+medianIndex, items.end());
+    std::vector<std::pair<Embedding_T,int>> rightTree(items.begin()+medianIndex+1, items.end());
     
     Node* root = new Node{items[medianIndex].first, items[medianIndex].second};
     
@@ -71,5 +70,30 @@ void knnSearch(Node *node,
     You should recursively traverse the tree and maintain a max-heap of the K closest points found so far.
     For now, this is a stub that does nothing.
     */
+   if (node==nullptr):
+        return;
+    axis = depth % Embedding_T<T>::Dim;
+
+    //Compare the query point (Node<T>::queryEmbedding) to the current node’s point along the splitting axis.
+    if getCoordinate(node->queryEmbedding, axis) < getCoordinate(node->embedding, axis):
+        knnSearch(node->left, depth+1, heap);
+    else:
+        knnSearch(node->right, depth+1, heap);
+
+    //now heap is updated w closer tree candidates
+    //we check current node -- shd it be added to heap?
+
+    if (heap.size()<K):
+        heap.push(node->embedding)
+
+    if (distance(node->queryEmbedding, node->embedding) < heap.top()):
+        heap.pop();
+        heap.push(node->embedding)
+
+
+    //if current node was better than (old) worst node on the heap then we can't prune -- explore
+
+
+
     return;
 }

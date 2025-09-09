@@ -98,7 +98,6 @@ Node<T>* buildKD(std::vector<std::pair<T,int>>& items, int depth = 0)
     /*
     TODO: Implement this function to build a balanced KD-tree.
     You should recursively construct the tree and return the root node.
-    For now, this is a stub that returns nullptr.
     */
 
     if (items.empty()) return nullptr;
@@ -114,8 +113,8 @@ Node<T>* buildKD(std::vector<std::pair<T,int>>& items, int depth = 0)
 
     int medianIndex = (n-1)/2;
     
-    std::vector<std::pair<Embedding_T<std::vector<float>>,int>> leftTree(items.begin(), items.begin()+medianIndex);
-    std::vector<std::pair<Embedding_T<std::vector<float>>,int>> rightTree(items.begin()+medianIndex+1, items.end());
+    auto leftTree = std::vector(items.begin(), items.begin()+medianIndex);
+    auto rightTree = std::vector (items.begin()+medianIndex+1, items.end());
     
     auto* root = new Node{items[medianIndex].first, items[medianIndex].second};
     
@@ -124,7 +123,6 @@ Node<T>* buildKD(std::vector<std::pair<T,int>>& items, int depth = 0)
     root->right = buildKD(rightTree, depth + 1);
     
     return root;
-
 }
 
 template <typename T>

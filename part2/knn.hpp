@@ -22,7 +22,6 @@ struct Embedding_T<float>
     }
 };
 
-
 // dynamic vector: runtime-D (global, set once at startup)
 inline size_t& runtime_dim() {
     static size_t d = 0;
@@ -90,6 +89,9 @@ T Node<T>::queryEmbedding;
  * @return A pointer to the root node of the constructed KD-tree.
  */
 // Build a balanced KD‐tree by splitting on median at each level.
+
+
+
 template <typename T>
 Node<T>* buildKD(std::vector<std::pair<T,int>>& items, int depth = 0)
 {
@@ -98,7 +100,31 @@ Node<T>* buildKD(std::vector<std::pair<T,int>>& items, int depth = 0)
     You should recursively construct the tree and return the root node.
     For now, this is a stub that returns nullptr.
     */
-    return nullptr;
+
+    if (items.empty()) return nullptr;
+
+    // diff than part 1, we use depth 
+    sort(items.begin(), items.end(),
+		[&depth](auto& a, auto& b){
+			return (getCoordinate(a.first, depth) < getCoordinate(b.first, depth));
+		});
+    
+
+    int n = items.size();
+
+    int medianIndex = (n-1)/2;
+    
+    std::vector<std::pair<Embedding_T<std::vector<float>>,int>> leftTree(items.begin(), items.begin()+medianIndex);
+    std::vector<std::pair<Embedding_T<std::vector<float>>,int>> rightTree(items.begin()+medianIndex+1, items.end());
+    
+    auto* root = new Node{items[medianIndex].first, items[medianIndex].second};
+    
+    //build tree
+    root->left = buildKD(leftTree, depth + 1);
+    root->right = buildKD(rightTree, depth + 1);
+    
+    return root;
+
 }
 
 template <typename T>
@@ -151,10 +177,7 @@ void knnSearch(Node<T> *node,
                int K,
                MaxHeap &heap)
 {
-    /*
-    TODO: Implement this function to perform k-nearest neighbors (k-NN) search on the KD-tree.
-    You should recursively traverse the tree and maintain a max-heap of the K closest points found so far.
-    For now, this is a stub that does nothing.
-    */
+    
+
     return;
 }

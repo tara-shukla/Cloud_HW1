@@ -106,7 +106,7 @@ Node<T>* buildKD(std::vector<std::pair<T,int>>& items, int depth = 0)
     // diff than part 1, we use depth 
     sort(items.begin(), items.end(),
 		[&axis](auto& a, auto& b){
-			return (getCoordinate(a.first, depth) < getCoordinate(b.first, depth));
+			return (getCoordinate(a.first, axis) < getCoordinate(b.first, axis));
 		});
     
 

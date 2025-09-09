@@ -101,10 +101,11 @@ Node<T>* buildKD(std::vector<std::pair<T,int>>& items, int depth = 0)
     */
 
     if (items.empty()) return nullptr;
+    int axis = depth % static_cast<int>(Embedding_T<T>::Dim());
 
     // diff than part 1, we use depth 
     sort(items.begin(), items.end(),
-		[&depth](auto& a, auto& b){
+		[&axis](auto& a, auto& b){
 			return (getCoordinate(a.first, depth) < getCoordinate(b.first, depth));
 		});
     

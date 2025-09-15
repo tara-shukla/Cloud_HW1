@@ -22,7 +22,6 @@ struct Embedding_T<float>
     }
 };
 
-
 // dynamic vector: runtime-D (global, set once at startup)
 inline size_t& runtime_dim() {
     static size_t d = 0;
@@ -90,15 +89,41 @@ T Node<T>::queryEmbedding;
  * @return A pointer to the root node of the constructed KD-tree.
  */
 // Build a balanced KD‐tree by splitting on median at each level.
+
+
+
 template <typename T>
 Node<T>* buildKD(std::vector<std::pair<T,int>>& items, int depth = 0)
 {
     /*
     TODO: Implement this function to build a balanced KD-tree.
     You should recursively construct the tree and return the root node.
-    For now, this is a stub that returns nullptr.
     */
-    return nullptr;
+
+    if (items.empty()) return nullptr;
+    int axis = depth % static_cast<int>(Embedding_T<T>::Dim());
+
+    // diff than part 1, we use depth 
+    sort(items.begin(), items.end(),
+		[&axis](auto& a, auto& b){
+			return (getCoordinate(a.first, axis) < getCoordinate(b.first, axis));
+		});
+    
+
+    int n = items.size();
+
+    int medianIndex = (n-1)/2;
+    
+    auto leftTree = std::vector(items.begin(), items.begin()+medianIndex);
+    auto rightTree = std::vector(items.begin()+medianIndex+1, items.end());
+    
+    auto* root = new Node{items[medianIndex].first, items[medianIndex].second};
+    
+    //build tree
+    root->left = buildKD(leftTree, depth + 1);
+    root->right = buildKD(rightTree, depth + 1);
+    
+    return root;
 }
 
 template <typename T>
@@ -156,5 +181,52 @@ void knnSearch(Node<T> *node,
     You should recursively traverse the tree and maintain a max-heap of the K closest points found so far.
     For now, this is a stub that does nothing.
     */
+
+
+   if (node==nullptr){
+        return;
+   }
+
+    // size_t my_size = Embedding_T<T>::Dim();
+    int axis = depth %  static_cast<int> (Embedding_T<T>::Dim());
+
+    //Compare the query point (Node<T>::queryEmbedding) to the current node’s point along the splitting axis.
+    if (getCoordinate(Node<T>::queryEmbedding, axis) < getCoordinate(node->embedding, axis)){
+        knnSearch(node->left, depth+1,K, heap);
+    }
+        
+    else{
+        knnSearch(node->right, depth+1,K, heap);
+    }
+
+    //now heap is updated w closer tree candidates
+    //we check current node -- shd it be added to heap?
+
+    if (heap.size()< static_cast<size_t>(K)){
+        // heap.push({node->embedding::distance(Node<T>::queryEmbedding, node->embedding), node->idx});
+        heap.push({Embedding_T<T>::distance(Node<T>::queryEmbedding, node->embedding), node->idx});
+    }
+    else if (Embedding_T<T>::distance(Node<T>::queryEmbedding, node->embedding) < heap.top().first){
+        heap.pop();
+        heap.push({Embedding_T<T>::distance(Node<T>::queryEmbedding, node->embedding), node->idx});
+    }
+
+    //if current node is not the worst node on the heap then we can't prune 
+    //because something could still beat the worst node -- explore other
+    //or if we still need to add candidates
+
+    float planeDist = std::abs(getCoordinate(Node<T>::queryEmbedding, axis)-getCoordinate(node->embedding, axis));
+
+    // if (heap.size()< static_cast<size_t>(K) || distance(heap.top().first, Node::queryEmbedding)> planeDist){
+
+    if (heap.size()< static_cast<size_t>(K) || heap.top().first > planeDist){
+
+        if (getCoordinate(Node<T>::queryEmbedding, axis) < getCoordinate(node->embedding, axis)){
+            knnSearch(node->right, depth+1, K,heap);
+        }
+        else{
+            knnSearch(node->left, depth+1, K, heap);
+        }
+    }
     return;
 }

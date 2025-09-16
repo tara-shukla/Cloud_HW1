@@ -102,16 +102,21 @@ Node<T>* buildKD(std::vector<std::pair<T,int>>& items, int depth = 0)
 
     // diff than part 1, we use depth 
     sort(items.begin(), items.end(),
-        [&axis](auto& a, auto& b){
-            int curAxis = axis;
-            bool comp = (getCoordinate(a.first, curAxis) < getCoordinate(b.first, curAxis));
-            while (getCoordinate(a.first, curAxis) == getCoordinate(b.first, curAxis)){
-                curAxis = curAxis + 1;
-                comp = (getCoordinate(a.first, curAxis) < getCoordinate(b.first, curAxis));
+    [axis](const auto& a, const auto& b){
+        int dim = static_cast<int>(Embedding_T<T>::Dim());
+        
+        for (int i = 0; i < dim; ++i) {
+            int curAxis = (axis + i) % dim;  
+            auto coord_a = getCoordinate(a.first, curAxis);
+            auto coord_b = getCoordinate(b.first, curAxis);
+            
+            if (coord_a != coord_b) {
+                return coord_a < coord_b;
             }
-            return comp;
-        });
-
+        }
+        
+        return false; 
+    });
 
     int n = items.size();
 
@@ -182,7 +187,6 @@ void knnSearch(Node<T> *node,
     /*
     TODO: Implement this function to perform k-nearest neighbors (k-NN) search on the KD-tree.
     You should recursively traverse the tree and maintain a max-heap of the K closest points found so far.
-    For now, this is a stub that does nothing.
     */
     if (node==nullptr){
         return;
@@ -207,7 +211,7 @@ void knnSearch(Node<T> *node,
         // heap.push({node->embedding::distance(Node<T>::queryEmbedding, node->embedding), node->idx});
         heap.push({Embedding_T<T>::distance(Node<T>::queryEmbedding, node->embedding), node->idx});
     }
-    else if (Embedding_T<T>::distance(Node<T>::queryEmbedding, node->embedding) < heap.top().first){
+    else if (Embedding_T<T>::distance(Node<T>::queryEmbedding, node->embedding) <= heap.top().first){
         heap.pop();
         heap.push({Embedding_T<T>::distance(Node<T>::queryEmbedding, node->embedding), node->idx});
     }

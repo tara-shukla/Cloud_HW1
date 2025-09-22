@@ -102,7 +102,7 @@ Node<T>* buildKD(std::vector<std::pair<T,int>>& items, int depth = 0)
 
     // diff than part 1, we use depth 
     sort(items.begin(), items.end(),
-    [axis](const auto& a, const auto& b){
+    [&axis](const auto& a, const auto& b){
         int dim = static_cast<int>(Embedding_T<T>::Dim());
         
         for (int i = 0; i < dim; ++i) {
@@ -192,8 +192,21 @@ void knnSearch(Node<T> *node,
         return;
    }
 
+
     // size_t my_size = Embedding_T<T>::Dim();
     int axis = depth %  static_cast<int> (Embedding_T<T>::Dim());
+
+    //now heap is updated w closer tree candidates
+    //we check current node -- shd it be added to heap?
+
+    if (heap.size()< static_cast<size_t>(K)){
+        // heap.push({node->embedding::distance(Node<T>::queryEmbedding, node->embedding), node->idx});
+        heap.push({Embedding_T<T>::distance(Node<T>::queryEmbedding, node->embedding), node->idx});
+    }
+    else if (Embedding_T<T>::distance(Node<T>::queryEmbedding, node->embedding) < heap.top().first){
+        heap.pop();
+        heap.push({Embedding_T<T>::distance(Node<T>::queryEmbedding, node->embedding), node->idx});
+    }
 
     //Compare the query point (Node<T>::queryEmbedding) to the current node’s point along the splitting axis.
     if (getCoordinate(Node<T>::queryEmbedding, axis) < getCoordinate(node->embedding, axis)){
@@ -204,17 +217,7 @@ void knnSearch(Node<T> *node,
         knnSearch(node->right, depth+1,K, heap);
     }
 
-    //now heap is updated w closer tree candidates
-    //we check current node -- shd it be added to heap?
 
-    if (heap.size()< static_cast<size_t>(K)){
-        // heap.push({node->embedding::distance(Node<T>::queryEmbedding, node->embedding), node->idx});
-        heap.push({Embedding_T<T>::distance(Node<T>::queryEmbedding, node->embedding), node->idx});
-    }
-    else if (Embedding_T<T>::distance(Node<T>::queryEmbedding, node->embedding) <= heap.top().first){
-        heap.pop();
-        heap.push({Embedding_T<T>::distance(Node<T>::queryEmbedding, node->embedding), node->idx});
-    }
 
     //if current node is not the worst node on the heap then we can't prune 
     //because something could still beat the worst node -- explore other
